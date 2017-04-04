@@ -1,4 +1,5 @@
 from pymongo import MongoClient
+import errno
 
 
 class Scraper(object):
@@ -7,24 +8,27 @@ class Scraper(object):
         self.db = self.client.words_database
         # Collections are created in a lazy way, therefore it is not declared nor initialized here
 
-    def save_word_in_db(self, word_list):
+    def save_words_in_db(self, words_list):
         '''
-        Insert the frequence list in the database
+        Insert the frequence list in the database if it
+        does not exist in it yet
         '''
-        self.db.words.insert_one(word_list)
+        if type(words_list) is dict:
+            input_id = None
+            if self.exists_in_db(words_list):
+                input_id = self.db.words.insert_one(words_list).inserted_id
+            return input_id
+        else:
+            return errno.EINVAL
 
     def get_words_list_from_db(self):
         # Retrieve all the word lists excluding the ID attribute
-        cursor = self.db.words.find({}, {'_id': False})
-        # Save all the documents in the database
-        words_list = []
-        for record in cursor:
-            words_list.append(record)
-        return words_list
+        cursor = self.db.words.find()
+        return cursor
 
-if __name__ == "__main__":
-    s = Scraper()
-    # word_list = {"casa": 5, "mesa": 3, "patata": 2}
-    # s.save_word_in_db(word_list)
-    # print(s.get_words_list_from_db())
-    print("Hey!")
+    def exists_in_db(self, words_list):
+        if type(words_list) is dict:
+            element = self.db.words.find_one(words_list)
+            return element is None
+        else:
+            return errno.EINVAL
