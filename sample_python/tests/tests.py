@@ -1,16 +1,10 @@
 from unittest import TestCase
-from sample_python.code.scraper import Scraper
+from code.scraper import Scraper
 import mock
-<<<<<<< HEAD
-import mongomock
-from mock import *
-import errno
 
-=======
 from mock import *
 import mongomock
 import errno
->>>>>>> cambiosEnScraper
 
 class TestScraper(TestCase):
     def setUp(self):
@@ -21,7 +15,6 @@ class TestScraper(TestCase):
     def tearDown(self):
         self.scraper.db.drop_collection('words')
 
-<<<<<<< HEAD
     def test_get_words_list_from_db_with_only_one(self):
         temp_words_list = {"casa": 5, "mesa": 3, "patata": 2}
         self.scraper.db.words.insert_one(temp_words_list)
@@ -152,12 +145,6 @@ class TestScraper(TestCase):
         self.assertEqual([expected_words_list1, expected_words_list2, expected_words_list3, expected_words_list4,
                           expected_words_list5], received_words_list)
 
-    def test_mock_save_word_in_db(self):
-        temp_words_list = {"_id": 1, "casa": 5, "mesa": 3, "patata": 2}
-        mockFoo = Mock(return_value = None)
-        mockFoo(self.scraper.save_word_in_db, temp_words_list)
-        mockFoo.assert_called_once_with(self.scraper.save_word_in_db, {"_id": 1, "casa": 5, "mesa": 3, "patata": 2})
-
     def test_save_words_in_db_if_not_exists_yet(self):
         self.scraper.exists_in_db = Mock(return_value=True)
         # If we can insert, the returned value from save function must be different from None value
@@ -166,22 +153,6 @@ class TestScraper(TestCase):
     def test_save_words_in_db_if_exists_already(self):
         self.scraper.exists_in_db = Mock(return_value=False)
         self.assertIsNone(self.scraper.save_words_in_db({"dinero": 1000000}))
-=======
-    def test_save_words_in_db_if_not_exists_yet(self):
-        self.scraper.exists_in_db = Mock(return_value=True)
-        # If we can insert, the returned value from save function must be different from None value
-        self.assertIsNotNone(self.scraper.save_words_in_db({"dinero": 1000000}))
-
-    def test_save_words_in_db_if_exists_already(self):
-        self.scraper.exists_in_db = Mock(return_value=False)
-        self.assertIsNone(self.scraper.save_words_in_db({"dinero": 1000000}))
-
-    def test_get_words_list_from_db(self):
-        temp_words_list = {"casa": 5, "mesa": 3, "patata": 2}
-        self.scraper.db.words.find = mock.MagicMock(return_value=temp_words_list)
-        received_words_list = self.scraper.get_words_list_from_db()
-        self.assertEqual(temp_words_list, received_words_list)
->>>>>>> cambiosEnScraper
 
     def test_save_words_in_db_is_int(self):
         self.assertEqual(self.scraper.save_words_in_db(3), errno.EINVAL)
@@ -192,12 +163,3 @@ class TestScraper(TestCase):
     def test_save_words_in_db_is_string(self):
         self.assertEqual(self.scraper.save_words_in_db("Ordenador"), errno.EINVAL)
 
-<<<<<<< HEAD
-=======
-
-
-
-
-
-
->>>>>>> cambiosEnScraper
